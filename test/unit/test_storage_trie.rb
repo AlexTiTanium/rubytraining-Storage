@@ -33,13 +33,15 @@ class TestStorageTrie < Test::Unit::TestCase
   #
   def test_contains?
 
-    assert @storage.contains?('java')
-    assert @storage.contains?('java script')
-    assert @storage.contains?('perl')
-    assert @storage.contains?('Smalltalk')
+    assert_equal true, @storage.contains?('java')
+    assert_equal true, @storage.contains?('java script')
+    assert_equal true, @storage.contains?('perl')
+    assert_equal true, @storage.contains?('Smalltalk')
 
-    assert !@storage.contains?('cpp')
-    assert !@storage.contains?('cobol')
+    assert_equal false, @storage.contains?('cpp')
+    assert_equal false, @storage.contains?('cobol')
+
+    assert_equal false, @storage.contains?('Schem')
 
   end
 
@@ -47,7 +49,7 @@ class TestStorageTrie < Test::Unit::TestCase
   #
   def test_find
 
-    assert_raise Storage::BadFindRequest do
+    assert_raise RuntimeError do
       @storage.find('ja')
       @storage.find('j')
       @storage.find('')

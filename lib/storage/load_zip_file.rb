@@ -8,26 +8,28 @@ module Storage
 
     # Load from zip
     #
-    # @param [ String ] path
+    # @param [ String | File | IO ] file
     #
     # @since 0.0.1
-    def load_from_zip(path)
+    def load_from_zip(file)
 
-      Zip::File.open(path) do |zf|
-        zf.file.open('strings.dat', 'r') { |os|  self <<  JSON::parse(os.gets) }
+      Zip::InputStream.open(file) do |io|
+        io.get_next_entry
+        self <<  JSON::parse(io.read)
       end
 
     end
 
     # Save file to zip
     #
-    # @param [ String ] path
+    # @param [ String | File | IO ] file
     #
     # @since 0.0.1
-    def save_to_zip(path)
+    def save_to_zip(file)
 
-      Zip::File.open(path, Zip::File::CREATE) do |zf|
-        zf.file.open('strings.dat', 'w') { |os| os.puts self.to_a.to_json }
+      Zip::OutputStream.open(file) do |io|
+         io.put_next_entry("strings.dat")
+         io.write self.to_a.to_json
       end
 
     end

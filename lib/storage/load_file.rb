@@ -8,28 +8,26 @@ module Storage
 
     # Load from zip
     #
-    # @param [ String ] path
+    # @param [ String | File ] path_or_file
     #
     # @since 0.0.1
-    def load_from_file(path)
+    def load_from_file(file)
 
-      File.open(path, 'r') do |file|
-        self << JSON::parse(file.gets)
-      end
-
+      file = File.new(file, 'r') if file.is_a? String
+      self << JSON::parse(file.read)
+      file.close
     end
 
     # Save file to zi
     #
-    # @param [ String ] path
+    # @param [ String | File ] path
     #
     # @since 0.0.1
-    def save_to_file(path)
+    def save_to_file(file)
 
-      File.open(path, 'w') do |file|
-        file.puts self.to_a.to_json
-      end
-
+      file = File.new(file, 'w') if file.is_a? String
+      file.write self.to_a.to_json
+      file.close
     end
 
   end

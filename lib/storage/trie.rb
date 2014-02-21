@@ -71,7 +71,11 @@ module Storage
         node = node[char]
       end
 
-      !!node and node[:end]
+      if node and node[:end]
+        true
+      else
+        false
+      end
     end
 
     # Returns an array of all the strings contained in the trie
@@ -83,7 +87,7 @@ module Storage
     # @since 0.0.1
     def find(string)
 
-      raise BadFindRequest.new('Min length of find param is 3 chars') unless string.length >= 3
+      raise 'Min length of find param is 3 chars' unless string.length >= 3
 
       node = @root
 

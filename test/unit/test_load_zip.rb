@@ -42,6 +42,46 @@ class TestLoadZip < Test::Unit::TestCase
 
   ##
   #
+  def test_load_from_zip_file
+
+    @storage.load_from_zip(File.new(STRING_PATH))
+
+    assert_equal ['php'], @storage.find('php')
+    assert @storage.contains?('php')
+
+    assert_equal ['Pascal'], @storage.find('Pascal')
+    assert @storage.contains?('Pascal')
+
+    assert_equal %w(php mathematica occam oxygene pascal seed7).sort, @storage.to_a.sort
+
+  end
+
+  ##
+  #
+  def test_save_to_zip_file
+
+    @storage.add('java')
+    @storage.add('java script')
+    @storage.add('perl')
+    @storage.add('rust')
+    @storage.add('Smalltalk')
+    @storage.add('Scheme')
+
+    @storage.save_to_zip(File.new(TMP_STRING_PATH, 'wb', 0777))
+
+    test_write = Storage::Trie.new
+    test_write.load_from_zip(TMP_STRING_PATH)
+
+    assert_equal ['java', 'java script', 'perl', 'rust', 'smalltalk', 'scheme'].sort, test_write.to_a.sort
+
+    # Test for append load
+    test_write.load_from_zip(STRING_PATH)
+    assert_equal ['java', 'java script', 'perl', 'rust', 'smalltalk', 'scheme', 'php', 'mathematica', 'occam', 'oxygene', 'pascal', 'seed7'].sort, test_write.to_a.sort
+
+  end
+
+  ##
+  #
   def test_save_to_zip
 
     @storage.add('java')
@@ -69,6 +109,7 @@ class TestLoadZip < Test::Unit::TestCase
 
   def teardown
     # Delete file
+
   end
 
 end
